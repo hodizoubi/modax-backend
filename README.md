@@ -11,7 +11,7 @@ This is a Flask backend for a Hebrew calculator chatbot application with Postgre
 - Email delivery of calculation results
 - Full RTL and Hebrew language support
 
-## Project Structure
+<!-- ## Project Structure
 
 ```
 /
@@ -27,22 +27,58 @@ This is a Flask backend for a Hebrew calculator chatbot application with Postgre
 └── services/
     ├── calculation_service.py # Calculation logic
     └── email_service.py       # Email formatting and delivery
-```
+``` -->
 
 ## Database Schema
 
-- **users**: Store user information (name, email)
-- **calculation_types**: Different types of calculations available
-- **questions**: Questions for each calculation type
-- **user_answers**: User responses to questions
-- **calculation_results**: Results of calculations
+Table calcuation_type {
+  Calcuation_type_id integer [primary key]
+  Calcuation_type varchar
+  total_questions_number integer
+}
+
+Table questions {
+  id integer [primary key]
+  Calcuation_type_id int
+  question varchar
+  question_type varchar
+}
+
+Table answers {
+  id integer [primary key]
+  text varchar
+  question_id varchar 
+}
+Table users{
+  id integer [primary key, increment]
+  email varchar 
+  username varchar
+}
+
+Table user_answer{
+  id integer [primary key , increment]
+  user_id integer
+  question_id varchar
+  answer varchar
+
+}
+
+Ref questions: questions.Calcuation_type_id > calcuation_type.Calcuation_type_id
+Ref answers: answers.question_id > questions.id
+
+Ref userAns: user_answer.user_id > users.id
+Ref userAnsQuestion: user_answer.question_id > questions.id
+
+// Ref: users.id < follows.following_user_id
+
+// Ref: users.id < follows.followed_user_id
 
 ## Setup and Installation
 
 ### Prerequisites
 
 - Python 3.8+
-- PostgreSQL database
+- docker
 
 ### Installation
 
@@ -57,25 +93,19 @@ This is a Flask backend for a Hebrew calculator chatbot application with Postgre
    pip install -r requirements.txt
    ```
 4. Set up PostgreSQL database
-5. Copy `.env.example` to `.env` and update with your configuration
-6. Initialize the database:
-   ```
-   flask shell
-   >>> from app import app
-   >>> from init_db import init_default_data
-   >>> with app.app_context():
-   ...     init_default_data()
-   >>> exit()
-   ```
-
-### Running the Application
-
-```
-flask run --host=0.0.0.0 --port=5001
+```bash
+chmod 777 run.sh
+./run.sh
 ```
 
-## API Endpoints
+now you ahve a data base server and you can access it using the output creds
 
-### User Management
+5. create the database and insert the dummy daya
 
-- `
+```bash
+python3 init_db.py
+```
+
+now start emplementing the flask code please :3
+
+## happy coding OwIse
